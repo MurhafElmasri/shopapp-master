@@ -90,7 +90,7 @@ const Register = () => {
               },
               route: "register",
             });
-            navigate("/Home");
+            navigate("/");
           }}
         >
           Create

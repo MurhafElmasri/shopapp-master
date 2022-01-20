@@ -13,14 +13,14 @@ export type CartItemType = {
   image: string;
   price: number;
   title: string;
-  amount: number;
+  amount: number
 };
 
 function App() {
+
   const [cartItems, setCartItems] = useState([] as CartItemType[]);
 
   const removefromcart = (clickedItem: CartItemType) => {
-    // setCartItems(cartItems.filter((product) => product !== clickedItem));
     setCartItems(prev =>
       prev.reduce((ack, item) => {
         if (item._id === clickedItem._id) {

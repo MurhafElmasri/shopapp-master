@@ -69,10 +69,12 @@ app.post("/Addproduct", async (req, res) => {
     image: req.body.image,
     description: req.body.description,
     price: req.body.price,
+    amount: "1",
   });
   try {
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
+    console.log(savedProduct)
   } catch (err) {
     res.status(500).json(err);
   }

@@ -9,6 +9,7 @@ const Addproduct = () => {
   const [image, setimage] = useState("");
   const [description, setdescription] = useState("");
   const [price, setprice] = useState("");
+  const [amount, setamount] = useState("1");
   // const [products, setproducts] = useState("No products found");
 
 
@@ -69,6 +70,7 @@ const Addproduct = () => {
                   image,
                   description,
                   price,
+                  amount,
                 }
               });
               // console.log(response);

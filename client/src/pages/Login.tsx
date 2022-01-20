@@ -61,11 +61,12 @@ const Link = styled.a`
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [userid, setuserid] = useState("");
+
   
 
   const [islogin, setislogin ] = useLocalStorage("islogin", false);
-  // const [userid, setuserid, removeuserid ] = useLocalStorage("userid", "");
+  const [userid, setuserid ] = useLocalStorage("userid", "");
+
 
 
   const [userIsWrong, setUserIsWrong] = useState(false);

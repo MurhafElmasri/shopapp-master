@@ -8,7 +8,6 @@ import username from "../pages/Login";
 import { useLocalStorage } from "react-use-storage";
 import { getrequest } from "../utils/getrequest";
 
-
 const Container = styled.div`
   height: 70px;
 `;
@@ -52,21 +51,24 @@ const Right = styled.div`
 `;
 
 const Navbar = () => {
-  const [islogin, setislogin ] = useLocalStorage("islogin", false);
+  const [islogin, setislogin] = useLocalStorage("islogin", false);
+  const [userid, setuserid] = useLocalStorage("userid", "");
   // const [userid, setuserid, removeuserid ] = useLocalStorage("userid", "");
 
   const response2 = async () => {
     const response = await getrequest();
-  }
-  
+  };
+
   return (
     <Container>
       <Wrapper>
         <Left>
-          <Logo
-            src="/img/shop_logo_big.png"
-            style={{ width: 100, height: 65 }}
-          />
+          <Link to="/">
+            <Logo
+              src="/img/shop_logo_big.png"
+              style={{ width: 100, height: 65 }}
+            />
+          </Link>
         </Left>
         <Center>
           <SearchContainer>
@@ -78,11 +80,16 @@ const Navbar = () => {
           <div className="Wrapper">
             <ul className="list">
               {islogin ? (
-
                 <>
-                
-                  <li className="Menuitem">{username}</li>
-                  <li className="Menuitem" onClick={() => {setislogin(false)}}>LOGOUT</li>
+                  <li className="Menuitem">{userid}</li>
+                  <li
+                    className="Menuitem"
+                    onClick={() => {
+                      setislogin(false);
+                    }}
+                  >
+                    LOGOUT
+                  </li>
                 </>
               ) : (
                 <>

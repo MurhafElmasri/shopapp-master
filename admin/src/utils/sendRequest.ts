@@ -15,7 +15,7 @@ export async function sendRequest(params: Args) {
     body: JSON.stringify(data),
   });
 
-  // console.log(data)
+  console.log(data)
   const responseToJson = res.json();
 
   return responseToJson;

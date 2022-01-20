@@ -128,6 +128,8 @@ const Cart = (props: props) => {
   const navigate = useNavigate();
   const calculateTotal = (items: CartItemType[]) =>
     items.reduce((ack: number, item) => ack + item.amount * item.price, 0);
+  
+
 
   return (
     <Container>
