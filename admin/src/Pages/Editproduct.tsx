@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import "./Addproduct.css";
-import { sendRequest } from "../utils/sendRequest";
-import { getrequest } from "../utils/getrequest";
-import { useNavigate } from "react-router-dom";
+import { Route, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { deleterequest } from "../utils/deleterequest";
+import { putrequest } from "../utils/putrequest";
+const localhost = process.env.REACT_APP_LOCALHOST_KEY;
 
-const Addproduct = () => {
+const Editproduct = () => {
+  const params = useParams() as { id: string };
+
+  //   const product = products.find((x) => x.id === params.productid);
   const [title, settitle] = useState("");
   const [image, setimage] = useState("");
   const [description, setdescription] = useState("");
   const [price, setprice] = useState("");
   // const [products, setproducts] = useState("No products found");
-
-
 
   function submit(e: { preventDefault: () => void }) {
     e.preventDefault();
@@ -24,6 +26,30 @@ const Addproduct = () => {
     };
   }
   const navigate = useNavigate();
+  // type Args = { id: string };
+  // async function deleterequest(props: Args) {
+  //   const { id } = props;
+
+  //   // console.log({ loc: process.env.LOCALHOST });
+
+  //   const res = await fetch(`${localhost}:3000/Home/:${params.id}`, {
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     method: "DELETE",
+  //   })
+  //     // .then((res) => res.json())
+  //     // .then((id) => console.log(id))
+  //     // .catch((err: any) => {
+  //     //   console.log(err);
+  //     // });
+
+  //   // console.log(data)
+  //     const responseToJson = res.json();
+
+  //     return responseToJson;
+  // }
 
   return (
     <div className="productinfo">
@@ -61,29 +87,28 @@ const Addproduct = () => {
           />
         </div>
         <div className="actions">
-          <button
-            onClick={async () => {
-              const response = await sendRequest({
-                data: {
-                  title,
-                  image,
-                  description,
-                  price,
-                }
-              });
-              // console.log(response);
-              // const response2 = await getrequest();
-              // setproducts(response2);
-              // console.log(products)
-              navigate("/");
-            }}
-          >
-            Add Product
-          </button>
+          <Link to={`/`}>
+            <button
+              onClick={async () => {
+                const response = await putrequest({
+                  data: {
+                    title,
+                    image,
+                    description,
+                    price,
+                  },
+                  id: params.id,
+                });
+                navigate("/");
+              }}
+            >
+              Edit Product
+            </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default Addproduct;
+export default Editproduct;

@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { CartItemType } from "../App";
 import Deal from "../components/Deal";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
-import productsList from "../Data";
+
+import { getrequest } from "../utils/getrequest";
 
 const Container = styled.div``;
 
@@ -62,23 +65,36 @@ const Button = styled.button`
   }
 `;
 
+interface props {
+  addtocart: (clickedItem: CartItemType) => void;
+}
 
+const Product = (props: props) => {
+  const [products, setproducts] = useState([] as CartItemType[]);
+  const skipad = async () => {
+    const response = await getrequest();
+    setproducts(response);
+    console.log(response);
+  };
 
-const Product = () => {
-  const params = useParams() as { productId: string };
+  const params = useParams() as { id: string };
+  const product = products.find((x) => x._id === params.id);
+  const { addtocart } = props;
 
-  console.log("========>", { params });
-
-  const product = productsList.find((x) => x.id === params.productId);
+  // const [cartItems, setCartItems] = useState([] as CartItemType[]);
 
   if (!product) {
-    return <h1>Product Not Found</h1>;
-  }else {
+    return (
+      <>
+        <h1 onClick={skipad}>Skip Ad</h1>
 
+      </>
+    );
+  } else {
     return (
       <Container>
-        <Navbar />
         <Deal />
+        <Navbar />
         <Wrapper>
           <ImgContainer>
             <Image src={product.image} />
@@ -88,17 +104,14 @@ const Product = () => {
             <Desc>{product.description}</Desc>
             <Price>{product.price}</Price>
             <AddContainer>
-              {/* <Button onClick={() => addtocart(product)}>ADD TO CART</Button> */}
+              <Button onClick={() => addtocart(product)}>ADD TO CART</Button>
             </AddContainer>
           </InfoContainer>
         </Wrapper>
         <Newsletter />
       </Container>
     );
-
   }
-
-
 };
 
 export default Product;

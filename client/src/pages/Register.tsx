@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { sendRequest } from "../utils/sendRequest";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -31,7 +32,6 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 
-
 const Input = styled.input`
   flex: 1;
   width: 80%;
@@ -57,47 +57,44 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   return (
     <Container>
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
-        
-          <Input
-            placeholder="username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Input
-            placeholder="email"
-            onChange={(e) => setemail(e.target.value)}
-          />
 
-          <Input
-            placeholder="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <Input
+          placeholder="username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input placeholder="email" onChange={(e) => setemail(e.target.value)} />
 
-          <Input placeholder="confirm password" />
-          <Agreement>
-            By creating an account, I consent to the processing of my personal
-            data in accordance with the <b>PRIVACY POLICY</b>
-          </Agreement>
-          <Button
-            onClick={async () => {
-              const response = await sendRequest({
-                data: {
-                  username,
-                  email,
-                  password,
-                },
-                route: "register",
-              });
-              
-            }}
-          >
-            Create
-          </Button>
-        
+        <Input
+          placeholder="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <Input placeholder="confirm password" />
+        <Agreement>
+          By creating an account, I consent to the processing of my personal
+          data in accordance with the <b>PRIVACY POLICY</b>
+        </Agreement>
+        <Button
+          onClick={async () => {
+            const response = await sendRequest({
+              data: {
+                username,
+                email,
+                password,
+              },
+              route: "register",
+            });
+            navigate("/Home");
+          }}
+        >
+          Create
+        </Button>
       </Wrapper>
     </Container>
   );

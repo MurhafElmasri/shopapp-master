@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "react-use-storage";
 import styled from "styled-components";
 import { sendRequest } from "../utils/sendRequest";
 
@@ -32,11 +33,6 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
 const Input = styled.input`
   width: 80%;
   flex: 1;
@@ -65,8 +61,16 @@ const Link = styled.a`
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userid, setuserid] = useState("");
+  
+
+  const [islogin, setislogin ] = useLocalStorage("islogin", false);
+  // const [userid, setuserid, removeuserid ] = useLocalStorage("userid", "");
+
 
   const [userIsWrong, setUserIsWrong] = useState(false);
+  const [passIsWrong, setpassIsWrong] = useState(false);
+
   const navigate = useNavigate();
 
   return (
@@ -76,36 +80,40 @@ const Login = () => {
         <Input
           placeholder="username"
           onChange={(e) => setUsername(e.target.value)}
-          // style={userIsWrong ? { border: "1px solid red" } : {}}
+          style={userIsWrong ? { border: "1px solid red" } : {}}
         />
-        {/* {userIsWrong ? (
+        {userIsWrong ? (
           <span style={{ color: "red" }}>The Entered Username is Wrong</span>
-        ) : null} */}
-
+        ) : null}
         <Input
           placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
+          style={passIsWrong ? { border: "1px solid red" } : {}}
         />
+        {passIsWrong ? (
+          <span style={{ color: "red" }}>The Entered Password is Wrong</span>
+        ) : null}
+
         <Button
           onClick={async () => {
             const response = await sendRequest({
               route: "Login",
-              data: { username, password },
+              data: { username, password }
             });
-            console.log({ response });
 
             if (response.status === "loginSuccess") {
+              setislogin(true);
+              setuserid(response.username)
+              console.log(userid)
               navigate("/");
-              alert("Login Successfully");
             }
 
             if (response.status === "userNotFound") {
-              alert("User Not Found! :(");
               setUserIsWrong(true);
             }
 
             if (response.status === "wrongPassword") {
-              alert("Wrong Password :(");
+              setpassIsWrong(true);
             }
           }}
         >

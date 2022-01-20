@@ -1,9 +1,13 @@
-import { Badge } from "@material-ui/core";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import './styles.css'
+import "./styles.css";
+// import isloggedin from "../pages/Login";
+import username from "../pages/Login";
+import { useLocalStorage } from "react-use-storage";
+import { getrequest } from "../utils/getrequest";
+
 
 const Container = styled.div`
   height: 70px;
@@ -48,6 +52,13 @@ const Right = styled.div`
 `;
 
 const Navbar = () => {
+  const [islogin, setislogin ] = useLocalStorage("islogin", false);
+  // const [userid, setuserid, removeuserid ] = useLocalStorage("userid", "");
+
+  const response2 = async () => {
+    const response = await getrequest();
+  }
+  
   return (
     <Container>
       <Wrapper>
@@ -66,23 +77,27 @@ const Navbar = () => {
         <Right>
           <div className="Wrapper">
             <ul className="list">
-              <li className="Menuitem">
-                <Link to="/Register">
-                  REGISTER
-                </Link>
-              </li>
-              <li className="Menuitem">
-                <Link to="/Login">
-                  SIGN IN
-                </Link>
-              </li>
+              {islogin ? (
+
+                <>
+                
+                  <li className="Menuitem">{username}</li>
+                  <li className="Menuitem" onClick={() => {setislogin(false)}}>LOGOUT</li>
+                </>
+              ) : (
+                <>
+                  <li className="Menuitem">
+                    <Link to="/Register">REGISTER</Link>
+                  </li>
+                  <li className="Menuitem">
+                    <Link to="/Login">SIGN IN</Link>
+                  </li>
+                </>
+              )}
+
               <li className="Menuitem">
                 <Link to="/Cart">
-                  
-                    <Badge badgeContent={4} color="primary">
-                      <ShoppingCartOutlined />
-                    </Badge>
-                  
+                  <ShoppingCartOutlined />
                 </Link>
               </li>
             </ul>

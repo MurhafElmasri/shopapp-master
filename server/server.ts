@@ -1,8 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
 const app = express();
-const productRoute = require("./routes/product");
 const cors = require("cors");
+const mongo = require("mongodb").MongoClient;
+const assert = require("assert");
+
+const url =
+  "mongodb+srv://shop_app:apo0khan@cluster0.xg3tm.mongodb.net/shop?retryWrites=true&w=majority";
+
+mongoose.connect(url).then(() => console.log("DB Connection Successfull!"));
 
 app.use(
   cors({
@@ -10,28 +16,15 @@ app.use(
   })
 );
 const User = require("./models/User");
-const Product = require("./models/Product")
-
-mongoose
-  .connect(
-    "mongodb+srv://shop_app:apo0khan@cluster0.xg3tm.mongodb.net/shop?retryWrites=true&w=majority"
-  )
-  .then(() => console.log("DB Connection Successfull!"));
+const Product = require("./models/Product");
 
 app.use(express.json());
 
 
-app.use("/api", productRoute);
 
-app.post("/test", (req, res) => {
-  const reqBody = req.body;
-
-  console.log({ req: reqBody });
-
-  res.send({ text: "Hello World!!" });
-});
 
 //REGISTER
+
 app.post("/register", async (req, res) => {
   console.log("register is Called", req.body);
 
@@ -49,18 +42,34 @@ app.post("/register", async (req, res) => {
   }
 });
 
-//ADDPRODUCT
-app.post("/Addproduct", async (req, res) => {
-  console.log("Addproduct is Called");
 
+
+
+//GET DATA
+
+app.get("/", async (req, res) => {
+  Product.find()
+    .then((products: any) => {
+      console.log(products);
+      res.send(products);
+    })
+    .catch((err: any) => {
+      console.log(err);
+    });
+});
+
+
+
+
+//ADD PRODUCT
+
+app.post("/Addproduct", async (req, res) => {
   const newProduct = new Product({
     title: req.body.title,
     image: req.body.image,
     description: req.body.description,
     price: req.body.price,
-
   });
-
   try {
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
@@ -70,11 +79,46 @@ app.post("/Addproduct", async (req, res) => {
 });
 
 
+
+
+//EDIT PRODUCT DATA
+
+app.put("/Editproduct/:id", async (req, res) => {
+  const id = req.params.id;
+
+  console.log(id);
+  Product.findOneAndUpdate({id,
+    $set: {
+    title: req.body.title,
+    image: req.body.image,
+    description: req.body.description,
+    price: req.body.price
+  }}).then(() => 
+  console.log("hello world"))
+
+});
+
+
+
+
+//DELETE PRODUCT
+
+app.delete("/:id", (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  Product.findByIdAndDelete(id, function (err: any, docs: any) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Deleted : ", docs);
+    }
+  });
+  console.log(" Deleted ");
+});
+
 //LOGIN
 
 app.post("/Login", async (req, res) => {
-  console.log("Login Called");
-
   try {
     const userWithName = await User.findOne({
       username: req.body.username,
@@ -92,11 +136,10 @@ app.post("/Login", async (req, res) => {
 
     if (!userWithPassword) {
       res.send({ status: "wrongPassword" });
-      //   res.status(401).json("Wrong Password");
       return;
     }
 
-    res.send({ status: "loginSuccess" });
+    res.send({ status: "loginSuccess", username: userWithPassword.username });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -105,3 +148,4 @@ app.post("/Login", async (req, res) => {
 app.listen(3000, () => {
   console.log("Backend server is running");
 });
+

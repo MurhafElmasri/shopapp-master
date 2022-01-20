@@ -1,14 +1,12 @@
-// import dotenv from "dotenv";
-// dotenv.config();
 
-type Args = { route: string; data: any };
+const localhost = process.env.REACT_APP_LOCALHOST_KEY
+type Args = { data: any };
 
 export async function sendRequest(params: Args) {
-  const { route, data } = params;
+  const { data } = params;
 
-  // console.log({ loc: process.env.LOCALHOST });
 
-  const res = await fetch(`http://127.0.0.1:3000/${route}`, {
+  const res = await fetch(`${localhost}:3000/Addproduct`, {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
@@ -17,7 +15,7 @@ export async function sendRequest(params: Args) {
     body: JSON.stringify(data),
   });
 
-  console.log(data)
+  // console.log(data)
   const responseToJson = res.json();
 
   return responseToJson;

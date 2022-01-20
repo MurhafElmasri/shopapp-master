@@ -1,4 +1,3 @@
-import { ShoppingCartOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CartItemType } from "../App";
@@ -36,25 +35,9 @@ const Container = styled.div`
   }
 `;
 
-const Icon = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-  transition: all 0.5s ease;
-  &:hover {
-    background-color: #e9f5f5;
-    transform: scale(1.1);
-  }
-`;
 
 interface props {
   product: CartItemType;
-
 }
 
 const Product = (props: props) => {
@@ -62,16 +45,12 @@ const Product = (props: props) => {
 
   return (
     <Container>
-      <Link to={`/Product/${product.id}`}>
+      <Link to={`/Product/${product._id}`}>
         <div className="imgcon">
-          <img className="image" src={product.image} />
+          <img className="image" alt="" src={product.image} />
+          {/* <p> {product._id} </p> */}
         </div>
         <Info>
-          {/* <div onClick={() => addToCart(product)}> */}
-            <Icon>
-              <ShoppingCartOutlined />
-            </Icon>
-          {/* </div> */}
         </Info>
       </Link>
     </Container>

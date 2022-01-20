@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Addproduct from "./Pages/Addproduct";
 import "./Pages/Addproduct.css";
 import Home from "./Pages/Home";
-
+import Editproduct from "./Pages/Editproduct";
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />}></Route>
+            <Route path="/Editproduct/:id" element={<Editproduct />}></Route>
             <Route path="/Addproduct" element={<Addproduct />}></Route>
           </Routes>
         </Router>

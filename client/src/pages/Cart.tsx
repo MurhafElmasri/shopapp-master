@@ -1,13 +1,9 @@
 import { Add, Remove } from "@material-ui/icons";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { CartItemType } from "../App";
 import Announcement from "../components/Deal";
 import Navbar from "../components/Navbar";
-import productsList from "../Data";
-
-
 
 const Container = styled.div``;
 
@@ -33,16 +29,8 @@ const TopButton = styled.button`
   cursor: pointer;
 `;
 
-const TopTexts = styled.div``;
-const TopText = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  margin: 0px 10px;
-`;
-
 const Bottom = styled.div`
   display: flex;
-  justify-content: space-between;
 `;
 
 const Info = styled.div`
@@ -72,22 +60,16 @@ const Details = styled.div`
 
 const ProductName = styled.span``;
 
-const ProductId = styled.span``;
-
-const ProductColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-`;
-
-const ProductSize = styled.span``;
-
 const PriceDetail = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+const ProductAmount = styled.div`
+  font-size: 24px;
+  margin: 5px;
 `;
 
 const ProductAmountContainer = styled.div`
@@ -96,9 +78,8 @@ const ProductAmountContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const ProductAmount = styled.div`
-  font-size: 24px;
-  margin: 5px;
+const Products = styled.div`
+  // display: flex;
 `;
 
 const ProductPrice = styled.div`
@@ -106,18 +87,12 @@ const ProductPrice = styled.div`
   font-weight: 200;
 `;
 
-const Hr = styled.hr`
-  background-color: #eee;
-  border: none;
-  height: 1px;
-`;
-
 const Summary = styled.div`
-  flex: 1;
   border: 0.5px solid lightgray;
   border-radius: 10px;
   padding: 20px;
   height: 50vh;
+  justify-content: flex-end;
 `;
 
 const SummaryTitle = styled.h1`
@@ -143,85 +118,58 @@ const Button = styled.button`
 `;
 
 interface props {
-  product: CartItemType;
+  removefromcart: (clickedItem: CartItemType) => void;
+  addtocart: (clickedItem: CartItemType) => void;
+  cartItems: CartItemType[];
 }
 
 const Cart = (props: props) => {
-
-  const { product } = props;
-  const [cartItems, setCartItems] = useState([] as CartItemType[]);
-
-
-  const addtocart = (clickedItem: CartItemType) => {
-    setCartItems((prev) => {
-      const isItemInCart = prev.find(
-        (product) => product.id === clickedItem.id
-      );
-
-      if (isItemInCart) {
-        return prev.map((product) =>
-          product.id === clickedItem.id
-            ? { ...product, amount: product.amount + 1 }
-            : product
-        );
-      }
-      return [...prev, { ...clickedItem, amount: 1 }];
-    });
-  };
-
-  const removeFromCart = (clickedItem: CartItemType) => {
-    setCartItems((prev) =>
-      prev.reduce((ack, product) => {
-        if (product.id === clickedItem.id) {
-          if (product.amount === 1) return ack;
-          return [...ack, { ...product, amount: product.amount - 1 }];
-        } else {
-          return [...ack, product];
-        }
-      }, [] as CartItemType[])
-    );
-  };
-
+  const { removefromcart, cartItems, addtocart } = props;
+  const navigate = useNavigate();
+  const calculateTotal = (items: CartItemType[]) =>
+    items.reduce((ack: number, item) => ack + item.amount * item.price, 0);
 
   return (
     <Container>
-      <Navbar />
       <Announcement />
+      <Navbar />
       <Wrapper>
         <Title>YOUR CART</Title>
         <Top>
-          <TopButton>CONTINUE SHOPPING</TopButton>
-          <TopButton>CHECKOUT NOW</TopButton>
+          <TopButton onClick={() => navigate("/")}>CONTINUE SHOPPING</TopButton>
         </Top>
         <Bottom>
-          <Info>
-            <Product>
-              <ProductDetail>
-                <Image src={product.image} />
-                <Details>
-                  <ProductName>
-                    <b>Product:</b> {product.title}
-                  </ProductName>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add onClick={() => addtocart(product)} />
-                  <ProductAmount>{product.quantity}</ProductAmount>
-                  <Remove onClick={() => removeFromCart(product)} />
-                </ProductAmountContainer>
-                <ProductPrice>
-                  $ {product.price * product.quantity}
-                </ProductPrice>
-              </PriceDetail>
-            </Product>
-          </Info>
-
+          <Products>
+            {cartItems.map((cartitem) => (
+              <Info>
+                <Product>
+                  <ProductDetail>
+                    <Image src={cartitem.image} />
+                    <Details>
+                      <ProductName>
+                        <b>Product:</b> {cartitem.title}
+                      </ProductName>
+                    </Details>
+                  </ProductDetail>
+                  <PriceDetail>
+                    <ProductAmountContainer>
+                      <Add onClick={() => addtocart(cartitem)} />
+                      <ProductAmount>{cartitem.amount}</ProductAmount>
+                      <Remove onClick={() => removefromcart(cartitem)} />
+                    </ProductAmountContainer>
+                    <ProductPrice>
+                      $ {cartitem.price * cartitem.amount}
+                    </ProductPrice>
+                  </PriceDetail>
+                </Product>
+              </Info>
+            ))}
+          </Products>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>$ {calculateTotal(cartItems)} </SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -233,7 +181,7 @@ const Cart = (props: props) => {
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>$ {calculateTotal(cartItems)} </SummaryItemPrice>
             </SummaryItem>
             <Button onClick={() => alert("Implement Checkout!")}>
               CHECKOUT NOW
@@ -246,3 +194,9 @@ const Cart = (props: props) => {
 };
 
 export default Cart;
+
+// setCartItems((prev) =>
+//   prev.reduce((ack, product) => {
+//     return [...ack, product];
+//   }, [] as CartItemType[])
+// );
