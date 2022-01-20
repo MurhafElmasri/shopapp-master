@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import { sendRequest } from "../utils/sendRequest";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +57,19 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setconfirm] = useState("");
+  const [iserror, setiserror] = useState(false);
+  
+
   const navigate = useNavigate();
+
+  const confirmpassword = (e: ChangeEvent<HTMLInputElement>) => {
+    setconfirm(e.target.value)
+    if (password != confirm){
+      setiserror(true)
+    }
+
+  }
 
   return (
     <Container>
@@ -75,7 +87,14 @@ const Register = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <Input placeholder="confirm password" />
+        <Input
+          placeholder="Confirm password"
+          onChange={(e) => confirmpassword(e)}
+          style={iserror ? { border: "1px solid red" } : {}}
+        />
+        {iserror ? (
+          <span style={{ color: "red" }}>Confirm password should be match with entered password</span>
+        ) : null}
         <Agreement>
           By creating an account, I consent to the processing of my personal
           data in accordance with the <b>PRIVACY POLICY</b>
