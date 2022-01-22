@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useLocalStorage } from "react-use-storage";
 import styled from "styled-components";
 import { CartItemType } from "../App";
 import Deal from "../components/Deal";
@@ -80,9 +81,10 @@ const Product = (props: props) => {
   const params = useParams() as { id: string };
   const product = products.find((x) => x._id === params.id);
   const { addtocart } = props;
+  const navigate = useNavigate()
 
   // const [cartItems, setCartItems] = useState([] as CartItemType[]);
-
+  const [islogin, setislogin] = useLocalStorage("islogin", false);
   if (!product) {
     return (
       <>
@@ -104,7 +106,11 @@ const Product = (props: props) => {
             <Desc>{product.description}</Desc>
             <Price>{product.price}</Price>
             <AddContainer>
+            {islogin ? (
               <Button onClick={() => addtocart(product)}>ADD TO CART</Button>
+              ) : (
+                <Button onClick={() => navigate("/Login")}>ADD TO CART</Button>
+              )}
             </AddContainer>
           </InfoContainer>
         </Wrapper>

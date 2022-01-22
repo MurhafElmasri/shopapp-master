@@ -55,9 +55,6 @@ const Navbar = () => {
   const [userid, setuserid] = useLocalStorage("userid", "");
   // const [userid, setuserid, removeuserid ] = useLocalStorage("userid", "");
 
-  const response2 = async () => {
-    const response = await getrequest();
-  };
 
   return (
     <Container>
