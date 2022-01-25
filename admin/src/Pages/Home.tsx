@@ -9,11 +9,6 @@ const Home = () => {
 
   return (
     <div>
-      <div className="products">
-        {products.map((product: CartItemType) => (
-          <Product product={product} key={product._id} />
-        ))}
-      </div>
       <div className="Addbutton">
         <button
           onClick={async () => {
@@ -30,6 +25,11 @@ const Home = () => {
         >
           Add Product
         </button>
+      </div>
+      <div className="products">
+        {products.map((product: CartItemType) => (
+          <Product product={product} key={product._id} />
+        ))}
       </div>
     </div>
   );
