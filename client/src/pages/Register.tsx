@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { sendRequest } from "../utils/sendRequest";
-import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -59,17 +59,15 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirm, setconfirm] = useState("");
   const [iserror, setiserror] = useState(false);
-  
 
   const navigate = useNavigate();
 
   const confirmpassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setconfirm(e.target.value)
-    if (password != confirm){
-      setiserror(true)
+    setconfirm(e.target.value);
+    if (password != confirm) {
+      setiserror(true);
     }
-
-  }
+  };
 
   return (
     <Container>
@@ -93,7 +91,9 @@ const Register = () => {
           style={iserror ? { border: "1px solid red" } : {}}
         />
         {iserror ? (
-          <span style={{ color: "red" }}>Confirm password should be match with entered password</span>
+          <span style={{ color: "red" }}>
+            Confirm password should be match with entered password
+          </span>
         ) : null}
         <Agreement>
           By creating an account, I consent to the processing of my personal
