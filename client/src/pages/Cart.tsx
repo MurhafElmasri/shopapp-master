@@ -128,8 +128,6 @@ const Cart = (props: props) => {
   const navigate = useNavigate();
   const calculateTotal = (items: CartItemType[]) =>
     items.reduce((ack: number, item) => ack + item.amount * item.price, 0);
-  
-
 
   return (
     <Container>
@@ -171,7 +169,9 @@ const Cart = (props: props) => {
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ {calculateTotal(cartItems)} </SummaryItemPrice>
+              <SummaryItemPrice>
+                $ {calculateTotal(cartItems)}{" "}
+              </SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -183,7 +183,9 @@ const Cart = (props: props) => {
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ {calculateTotal(cartItems)} </SummaryItemPrice>
+              <SummaryItemPrice>
+                $ {calculateTotal(cartItems)}{" "}
+              </SummaryItemPrice>
             </SummaryItem>
             <Button onClick={() => alert("Implement Checkout!")}>
               CHECKOUT NOW

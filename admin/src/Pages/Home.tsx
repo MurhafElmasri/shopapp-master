@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { getrequest } from "../utils/getrequest";
+// import { getrequest } from "../utils/getrequest";
 import Product, { CartItemType } from "../Components/Product";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
   const [products, setproducts] = useState([]);
+
 
   return (
     <div>
@@ -17,8 +18,8 @@ const Home = () => {
       <div className="Addbutton">
         <button
           onClick={async () => {
-            const response = await getrequest();
-            setproducts(response);
+            // const response = await getrequest();
+            // setproducts(response);
           }}
         >
           show products

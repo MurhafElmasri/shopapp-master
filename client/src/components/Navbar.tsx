@@ -1,12 +1,10 @@
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
-import React from "react";
-import styled from "styled-components";
+import React, { SetStateAction } from "react";
 import { Link } from "react-router-dom";
-import "./styles.css";
-// import isloggedin from "../pages/Login";
-import username from "../pages/Login";
 import { useLocalStorage } from "react-use-storage";
-import { getrequest } from "../utils/getrequest";
+import styled from "styled-components";
+import "./styles.css";
+// import { getrequest } from "../utils/getrequest";
 
 const Container = styled.div`
   height: 70px;
@@ -50,11 +48,16 @@ const Right = styled.div`
   justify-content: flex-end;
 `;
 
-const Navbar = () => {
+interface Props {
+  setSearchValue?: React.Dispatch<SetStateAction<string>>;
+  searchValues?: string;
+}
+
+const Navbar = (props: Props) => {
   const [islogin, setislogin] = useLocalStorage("islogin", false);
   const [userid, setuserid] = useLocalStorage("userid", "");
   // const [userid, setuserid, removeuserid ] = useLocalStorage("userid", "");
-
+  const { searchValues, setSearchValue } = props;
 
   return (
     <Container>
@@ -69,7 +72,15 @@ const Navbar = () => {
         </Left>
         <Center>
           <SearchContainer>
-            <Input placeholder="Search" />
+            <Input
+              placeholder="Search"
+              value={searchValues ?? ""}
+              onChange={(e) => {
+                if (setSearchValue) {
+                  setSearchValue(e.target.value);
+                }
+              }}
+            />
             <Search style={{ color: "gray", fontSize: 16 }} />
           </SearchContainer>
         </Center>

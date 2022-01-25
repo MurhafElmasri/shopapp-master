@@ -1,5 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
+// const  = require("./models/Product");
+import { Product } from "./models/Product";
 const app = express();
 const cors = require("cors");
 const mongo = require("mongodb").MongoClient;
@@ -16,12 +18,8 @@ app.use(
   })
 );
 const User = require("./models/User");
-const Product = require("./models/Product");
 
 app.use(express.json());
-
-
-
 
 //REGISTER
 
@@ -42,12 +40,9 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
-
-
 //GET DATA
 
-app.get("/", async (req, res) => {
+app.get("/getProductsList", async (req, res) => {
   Product.find()
     .then((products: any) => {
       console.log(products);
@@ -58,8 +53,18 @@ app.get("/", async (req, res) => {
     });
 });
 
+app.get("/getProductById/:id", async (req, res) => {
+  const productId = req.params.id;
 
+  if (!productId) {
+    res.send({ status: "error", productData: undefined });
+    return;
+  }
 
+  const productData = await Product.findById(productId);
+
+  res.send({ productData });
+});
 
 //ADD PRODUCT
 
@@ -74,14 +79,11 @@ app.post("/Addproduct", async (req, res) => {
   try {
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
-    console.log(savedProduct)
+    console.log(savedProduct);
   } catch (err) {
     res.status(500).json(err);
   }
 });
-
-
-
 
 //EDIT PRODUCT DATA
 
@@ -89,19 +91,16 @@ app.put("/Editproduct/:id", async (req, res) => {
   const id = req.params.id;
 
   console.log(id);
-  Product.findOneAndUpdate({id,
+  Product.findOneAndUpdate({
+    id,
     $set: {
-    title: req.body.title,
-    image: req.body.image,
-    description: req.body.description,
-    price: req.body.price
-  }}).then(() => 
-  console.log("hello world"))
-
+      title: req.body.title,
+      image: req.body.image,
+      description: req.body.description,
+      price: req.body.price,
+    },
+  }).then(() => console.log("hello world"));
 });
-
-
-
 
 //DELETE PRODUCT
 
@@ -150,4 +149,3 @@ app.post("/Login", async (req, res) => {
 app.listen(3000, () => {
   console.log("Backend server is running");
 });
-

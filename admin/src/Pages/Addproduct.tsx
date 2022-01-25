@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Addproduct.css";
 import { sendRequest } from "../utils/sendRequest";
-import { getrequest } from "../utils/getrequest";
+// import { getrequest } from "../utils/getrequest";
 import { useNavigate } from "react-router-dom";
 
 const Addproduct = () => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLocalStorage } from "react-use-storage";
 import styled from "styled-components";
@@ -6,8 +6,9 @@ import { CartItemType } from "../App";
 import Deal from "../components/Deal";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
+import { sendRequest } from "../utils/sendRequest";
 
-import { getrequest } from "../utils/getrequest";
+// import { getrequest } from "../utils/getrequest";
 
 const Container = styled.div``;
 
@@ -71,53 +72,56 @@ interface props {
 }
 
 const Product = (props: props) => {
-  const [products, setproducts] = useState([] as CartItemType[]);
-  const skipad = async () => {
-    const response = await getrequest();
-    setproducts(response);
-    console.log(response);
-  };
-
+  const [product, setProduct] = useState<CartItemType | undefined>();
   const params = useParams() as { id: string };
-  const product = products.find((x) => x._id === params.id);
+
+  useEffect(() => {
+    const getProduct = async () => {
+      const response = await sendRequest({
+        route: `getProductById/${params.id}`,
+        method: "GET",
+      });
+
+      setProduct(response.productData);
+    };
+
+    getProduct();
+  }, [params.id]);
+
   const { addtocart } = props;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // const [cartItems, setCartItems] = useState([] as CartItemType[]);
   const [islogin, setislogin] = useLocalStorage("islogin", false);
-  if (!product) {
-    return (
-      <>
-        <h1 onClick={skipad}>Skip Ad</h1>
 
-      </>
-    );
-  } else {
-    return (
-      <Container>
-        <Deal />
-        <Navbar />
-        <Wrapper>
-          <ImgContainer>
-            <Image src={product.image} />
-          </ImgContainer>
-          <InfoContainer>
-            <Title>{product.title}</Title>
-            <Desc>{product.description}</Desc>
-            <Price>{product.price}</Price>
-            <AddContainer>
+  if (!product) {
+    return null;
+  }
+
+  return (
+    <Container>
+      <Deal />
+      <Navbar />
+      <Wrapper>
+        <ImgContainer>
+          <Image src={product.image} />
+        </ImgContainer>
+        <InfoContainer>
+          <Title>{product.title}</Title>
+          <Desc>{product.description}</Desc>
+          <Price>{product.price}</Price>
+          <AddContainer>
             {islogin ? (
               <Button onClick={() => addtocart(product)}>ADD TO CART</Button>
-              ) : (
-                <Button onClick={() => navigate("/Login")}>ADD TO CART</Button>
-              )}
-            </AddContainer>
-          </InfoContainer>
-        </Wrapper>
-        <Newsletter />
-      </Container>
-    );
-  }
+            ) : (
+              <Button onClick={() => navigate("/Login")}>ADD TO CART</Button>
+            )}
+          </AddContainer>
+        </InfoContainer>
+      </Wrapper>
+      <Newsletter />
+    </Container>
+  );
 };
 
 export default Product;
