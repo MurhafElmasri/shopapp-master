@@ -31,7 +31,7 @@ const HomeImprovement = () => {
 
 
   const HomeImprovementlist = products.filter((x) =>
-    x.category === "HomeImprovement"
+    x.category === "Home improvement"
   );
 
 //   const filteredProductsList =
