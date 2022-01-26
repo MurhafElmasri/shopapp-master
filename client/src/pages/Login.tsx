@@ -101,7 +101,9 @@ const Login = () => {
               route: "Login",
               data: { username, password }
             });
-
+            setUserIsWrong(false)
+            setpassIsWrong(false)
+            
             if (response.status === "loginSuccess") {
               setislogin(true);
               setuserid(response.username)

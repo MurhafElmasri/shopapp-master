@@ -1,10 +1,16 @@
 // import { Info } from "@material-ui/icons";
 import styled from "styled-components";
-import React from "react";
+import React, { useState } from "react";
 import "./Product.css";
 import { Link } from "react-router-dom";
 import { deleterequest } from "../utils/deleterequest";
 import { useNavigate } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 export type CartItemType = {
   _id: string;
@@ -80,6 +86,22 @@ const Product = (props: props) => {
   `;
 
   const id = product._id;
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const verify = async ()  => {
+    const deleteproduct = await deleterequest({
+      id: product._id,
+    })}
+
+
   return (
     <div>
       <Container>
@@ -100,15 +122,31 @@ const Product = (props: props) => {
                     <Link to={`/Editproduct/${product._id}`}>
                       <button>edit</button>
                     </Link>
-                    <button
-                      onClick={async () => {
-                        const deleteproduct = await deleterequest({
-                          id: product._id,
-                        });
-                      }}
-                    >
-                      remove
-                    </button>
+
+                    <div>
+                      <Button variant="outlined" onClick={handleClickOpen}>
+                        Delete
+                      </Button>
+                      <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          {"Are you sure ?"}
+                        </DialogTitle>
+                        <DialogActions>
+                          <Button onClick={handleClose}>Cancel</Button>
+                          <Link to={"/"}>
+                            <Button onClick={() => { verify(); handleClose();}}
+                            >
+                              Delete
+                            </Button>
+                          </Link>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
                   </div>
                 </ProductPrice>
               </PriceDetail>

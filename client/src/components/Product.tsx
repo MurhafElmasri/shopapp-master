@@ -48,9 +48,9 @@ const Product = (props: props) => {
       <Link to={`/Product/${product._id}`}>
         <div className="imgcon">
           <img className="image" alt="" src={product.image} />
-          {/* <p> {product._id} </p> */}
         </div>
         <Info>
+          
         </Info>
       </Link>
     </Container>

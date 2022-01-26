@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-// import { getrequest } from "../utils/getrequest";
+import React, { useEffect, useState } from "react";
+import { getrequest } from "../utils/getrequest";
 import Product, { CartItemType } from "../Components/Product";
 import { useNavigate } from "react-router-dom";
 
@@ -7,18 +7,19 @@ const Home = () => {
   const navigate = useNavigate();
   const [products, setproducts] = useState([]);
 
+  useEffect(() => {
+    const loadProducts = async () => {
+      const response = await getrequest();
+      setproducts(response);
+    };
+    loadProducts();
+
+    // (async() => {})();
+  }, []);
 
   return (
     <div>
       <div className="Addbutton">
-        <button
-          onClick={async () => {
-            // const response = await getrequest();
-            // setproducts(response);
-          }}
-        >
-          show products
-        </button>
         <button
           onClick={() => {
             navigate("/Addproduct");

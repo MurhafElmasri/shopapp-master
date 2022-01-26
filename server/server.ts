@@ -75,6 +75,7 @@ app.post("/Addproduct", async (req, res) => {
     description: req.body.description,
     price: req.body.price,
     amount: "1",
+    category: req.body.category,
   });
   try {
     const savedProduct = await newProduct.save();

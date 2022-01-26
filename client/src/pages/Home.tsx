@@ -5,8 +5,42 @@ import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import Product from "../components/Product";
 import { sendRequest } from "../utils/sendRequest";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import "../components/styles.css";
 
 const Home = () => {
+  const Info = styled.div`
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 3;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    text-size: 30px;
+  `;
+
+  const Container = styled.div`
+    flex: 1;
+    margin: 5px;
+    min-width: 300px;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5fbfd;
+    position: relative;
+    &:hover ${Info} {
+      opacity: 1;
+    }
+  `;
   const [products, setProducts] = useState<CartItemType[]>([]);
   const [search, setSearch] = useState("");
 
@@ -39,9 +73,38 @@ const Home = () => {
       <Deal />
       <Navbar searchValues={search} setSearchValue={setSearch} />
       <div className="products">
-        {filteredProductsList.map((product: CartItemType) => (
-          <Product product={product} key={product._id} />
-        ))}
+        <Container>
+          <Link to={`/Categories/Elecetronics`}>
+            <div className="imgcon">
+              <img className="image" alt="" src="/img/Fuji_Dash_Electronics_1x._SY304_CB432774322_.jpg" />
+            </div>
+            <Info> Elecetronics </Info>
+          </Link>
+        </Container>
+        <Container>
+          <Link to={`/Categories/Fashion`}>
+            <div className="imgcon">
+              <img className="image" alt="" src="/img/تعليق توضيحي 2022-01-26 134145.png" />
+            </div>
+            <Info> Fashion </Info>
+          </Link>
+        </Container>
+        <Container>
+          <Link to={`/Categories/Sports`}>
+            <div className="imgcon">
+              <img className="image" alt="" src="/img/1440_201903062023.jpg" />
+            </div>
+            <Info> Sports </Info>
+          </Link>
+        </Container>
+        <Container>
+          <Link to={`/Categories/HomeImprovement`}>
+            <div className="imgcon">
+              <img className="image" alt="" src="/img/MLA4049.png" />
+            </div>
+            <Info> Home improvement </Info>
+          </Link>
+        </Container>
       </div>
       <Newsletter />
     </div>
