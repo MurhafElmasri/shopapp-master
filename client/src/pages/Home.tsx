@@ -1,13 +1,14 @@
+import { Button } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { CartItemType } from "../App";
 import Deal from "../components/Deal";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
-import Product from "../components/Product";
-import { sendRequest } from "../utils/sendRequest";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
 import "../components/styles.css";
+import generateRandomData from "../utils/generateRandomData";
+import { sendRequest } from "../utils/sendRequest";
 
 const Home = () => {
   const Info = styled.div`
@@ -72,8 +73,26 @@ const Home = () => {
   return (
     <div>
       <Deal />
+
       <Navbar searchValues={search} setSearchValue={setSearch} />
       <div className="products">
+        <Button
+          onClick={async () => {
+            const data = await generateRandomData({ itemsLength: 200 });
+
+            await Promise.all(
+              data.map(async (product) => {
+                await sendRequest({
+                  route: "Addproduct",
+                  data: product,
+                });
+              })
+            );
+            alert("Added Products Successfully :)");
+          }}
+        >
+          Click Me To Load Data
+        </Button>
         <Container>
           <Link to={`/Categories/Elecetronics`}>
             <div className="imgcon">

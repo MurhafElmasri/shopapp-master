@@ -4,8 +4,8 @@ import Deal from "../components/Deal";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import Product from "../components/Product";
-import { sendRequest } from "../utils/sendRequest";
 import "../components/styles.css";
+import { sendRequest } from "../utils/sendRequest";
 
 const Elecetronics = () => {
   const [products, setProducts] = useState<CartItemType[]>([]);
@@ -26,9 +26,7 @@ const Elecetronics = () => {
     // (async() => {})();
   }, []);
 
-  const Elecetronicslist = products.filter(
-    (x) => x.category === "Elecetronics"
-  );
+  const Elecetronicslist = products.filter((x) => x.category === "Electronics");
 
   //   const filteredProductsList =
   //     search.trim() === "" || !products
