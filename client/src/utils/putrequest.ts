@@ -1,10 +1,10 @@
 const localhost = process.env.REACT_APP_LOCALHOST_KEY;
-type Args = { id: string; data: any };
+type Args = { data: any };
 
 export async function putrequest(params: Args) {
-  const { id, data } = params;
+  const { data } = params;
 
-  const res = await fetch(`${localhost}:3000/Editproduct/${id}`, {
+  const res = await fetch(`${localhost}:3000/Editcartitem`, {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
@@ -12,4 +12,5 @@ export async function putrequest(params: Args) {
     method: "PUT",
     body: JSON.stringify(data),
   });
+  console.log(data);
 }

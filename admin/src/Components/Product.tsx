@@ -1,15 +1,12 @@
-// import { Info } from "@material-ui/icons";
 import styled from "styled-components";
 import React, { useState } from "react";
-import "./Product.css";
+import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { deleterequest } from "../utils/deleterequest";
 import { useNavigate } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 export type CartItemType = {
@@ -25,24 +22,13 @@ interface props {
 }
 
 const Product = (props: props) => {
-  const navigate = useNavigate();
+
   const { product } = props;
 
   const Container = styled.div``;
 
   const Wrapper = styled.div`
     padding: 20px;
-  `;
-
-  const Top = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-  `;
-
-  const Bottom = styled.div`
-    display: flex;
   `;
 
   const Info = styled.div`
@@ -85,7 +71,6 @@ const Product = (props: props) => {
     font-weight: 200;
   `;
 
-  const id = product._id;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -96,11 +81,11 @@ const Product = (props: props) => {
     setOpen(false);
   };
 
-  const verify = async ()  => {
+  const verify = async () => {
     const deleteproduct = await deleterequest({
       id: product._id,
-    })}
-
+    });
+  };
 
   return (
     <div>
@@ -139,7 +124,11 @@ const Product = (props: props) => {
                         <DialogActions>
                           <Button onClick={handleClose}>Cancel</Button>
                           <Link to={"/"}>
-                            <Button onClick={() => { verify(); handleClose();}}
+                            <Button
+                              onClick={() => {
+                                verify();
+                                handleClose();
+                              }}
                             >
                               Delete
                             </Button>

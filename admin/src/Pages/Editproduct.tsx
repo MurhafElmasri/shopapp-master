@@ -1,14 +1,14 @@
 import TextField from "@material-ui/core/TextField";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { putrequest } from "../utils/putrequest";
+import { getbyid } from "../utils/getbyid";
 import { makeStyles } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
-const localhost = process.env.REACT_APP_LOCALHOST_KEY;
+import Product from "../Components/Product";
 
 const useStyles = makeStyles({
   field: {
@@ -17,32 +17,46 @@ const useStyles = makeStyles({
     display: "block",
   },
 });
+export type CartItemType = {
+  _id: string;
+  description: string;
+  image: string;
+  price: number;
+  title: string;
+  amount: number;
+  category: string;
+};
 
 const Editproduct = () => {
   const params = useParams() as { id: string };
 
+  const [product, setproduct] = useState({} as CartItemType);
   const [title, settitle] = useState("");
   const [image, setimage] = useState("");
   const [description, setdescription] = useState("");
   const [price, setprice] = useState("");
   const [category, setcategory] = useState("");
 
-  function submit(e: { preventDefault: () => void }) {
-    e.preventDefault();
-
-    const ProductData = {
-      title: title,
-      image: image,
-      description: description,
-      price: price,
+  useEffect(() => {
+    const LoadOldValue = async () => {
+      const response = await getbyid({
+        id: params.id,
+      });
+      setproduct(response.data);
     };
-  }
+    LoadOldValue();
+    console.log(product);
+
+    // (async() => {})();
+  }, []);
+
   const navigate = useNavigate();
   const classes = useStyles();
 
   const navigator = () => {
     navigate("/");
   };
+
   const verify = async () => {
     const response = await putrequest({
       data: {
@@ -64,6 +78,7 @@ const Editproduct = () => {
           label="Title"
           variant="outlined"
           color="secondary"
+          defaultValue={product.title}
           fullWidth
           required
         />
@@ -73,6 +88,7 @@ const Editproduct = () => {
           label="Image URL"
           variant="outlined"
           color="secondary"
+          defaultValue={product.image}
           fullWidth
           required
         />
@@ -82,6 +98,7 @@ const Editproduct = () => {
           label="Description"
           variant="outlined"
           color="secondary"
+          defaultValue={product.description}
           fullWidth
           required
         />
@@ -91,6 +108,7 @@ const Editproduct = () => {
           label="Price"
           variant="outlined"
           color="secondary"
+          defaultValue={product.price}
           fullWidth
           required
         />
@@ -100,8 +118,8 @@ const Editproduct = () => {
               Category
             </InputLabel>
             <NativeSelect
-            onChange={(e) => setcategory(e.target.value)}
-              defaultValue="Elecetronics"
+              onChange={(e) => setcategory(e.target.value)}
+              defaultValue={product.category}
             >
               <option value="Elecetronics"> Elecetronics </option>
               <option value="Fashion"> Fashion </option>

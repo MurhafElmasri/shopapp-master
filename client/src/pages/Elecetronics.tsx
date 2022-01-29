@@ -5,8 +5,6 @@ import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import Product from "../components/Product";
 import { sendRequest } from "../utils/sendRequest";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
 import "../components/styles.css";
 
 const Elecetronics = () => {
@@ -28,18 +26,16 @@ const Elecetronics = () => {
     // (async() => {})();
   }, []);
 
-
-
-  const Elecetronicslist = products.filter((x) =>
-    x.category === "Elecetronics"
+  const Elecetronicslist = products.filter(
+    (x) => x.category === "Elecetronics"
   );
 
-//   const filteredProductsList =
-//     search.trim() === "" || !products
-//       ? products
-//       : products.filter((x) =>
-//           x.title.toLowerCase().includes(search.toLowerCase())
-//         );
+  //   const filteredProductsList =
+  //     search.trim() === "" || !products
+  //       ? products
+  //       : products.filter((x) =>
+  //           x.title.toLowerCase().includes(search.toLowerCase())
+  //         );
 
   return (
     <div>

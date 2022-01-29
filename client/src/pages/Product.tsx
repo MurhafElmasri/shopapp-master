@@ -6,6 +6,8 @@ import { CartItemType } from "../App";
 import Deal from "../components/Deal";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
+import { getbyid } from "../utils/getbyid";
+import { putrequest } from "../utils/putrequest";
 import { sendRequest } from "../utils/sendRequest";
 
 // import { getrequest } from "../utils/getrequest";
@@ -67,13 +69,59 @@ const Button = styled.button`
   }
 `;
 
-interface props {
-  addtocart: (clickedItem: CartItemType) => void;
-}
-
-const Product = (props: props) => {
+const Product = () => {
   const [product, setProduct] = useState<CartItemType | undefined>();
   const params = useParams() as { id: string };
+  const [userid, setuserid] = useLocalStorage("userid", "");
+  const [newamount, setnewamount] = useState(1);
+
+  const addtocart = async (product: CartItemType) => {
+    const response = await getbyid({
+      id: product._id,
+    });
+    console.log(response.status);
+    if (response.status === "error") {
+      const response2 = await sendRequest({
+        data: {
+          username: userid,
+          _id: product._id,
+          title: product.title,
+          image: product.image,
+          description: product.description,
+          price: product.price,
+          amount: 1,
+          category: product.category,
+        },
+        route: "AddCartitem",
+        method: "POST",
+      });
+    }
+    if (response.status === "success") {
+      if (response.isitemincart.username === userid) {
+        const response2 = await putrequest({
+          data: {
+            amount: response.isitemincart.amount + 1,
+            id: response.isitemincart._id,
+          },
+        });
+      } else {
+        const response2 = await sendRequest({
+          data: {
+            username: userid,
+            _id: product._id,
+            title: product.title,
+            image: product.image,
+            description: product.description,
+            price: product.price,
+            amount: 1,
+            category: product.category,
+          },
+          route: "AddCartitem",
+          method: "POST",
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     const getProduct = async () => {
@@ -88,10 +136,8 @@ const Product = (props: props) => {
     getProduct();
   }, [params.id]);
 
-  const { addtocart } = props;
   const navigate = useNavigate();
 
-  // const [cartItems, setCartItems] = useState([] as CartItemType[]);
   const [islogin, setislogin] = useLocalStorage("islogin", false);
 
   if (!product) {

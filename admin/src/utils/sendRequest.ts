@@ -1,10 +1,8 @@
-
-const localhost = process.env.REACT_APP_LOCALHOST_KEY
+const localhost = process.env.REACT_APP_LOCALHOST_KEY;
 type Args = { data: any };
 
 export async function sendRequest(params: Args) {
   const { data } = params;
-
 
   const res = await fetch(`${localhost}:3000/Addproduct`, {
     mode: "cors",
@@ -15,10 +13,8 @@ export async function sendRequest(params: Args) {
     body: JSON.stringify(data),
   });
 
-  console.log(data)
+  console.log(data);
   const responseToJson = res.json();
 
   return responseToJson;
-
 }
-

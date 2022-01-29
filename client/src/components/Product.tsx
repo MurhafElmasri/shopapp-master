@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { CartItemType } from "../App";
 import "./styles.css";
 
-
 const Info = styled.div`
   opacity: 0;
   width: 100%;
@@ -14,10 +13,11 @@ const Info = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   z-index: 3;
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: center;
   transition: all 0.5s ease;
   cursor: pointer;
+  text-size: 30px;
 `;
 
 const Container = styled.div`
@@ -35,7 +35,6 @@ const Container = styled.div`
   }
 `;
 
-
 interface props {
   product: CartItemType;
 }
@@ -49,9 +48,7 @@ const Product = (props: props) => {
         <div className="imgcon">
           <img className="image" alt="" src={product.image} />
         </div>
-        <Info>
-          
-        </Info>
+        <Info>{product.title}</Info>
       </Link>
     </Container>
   );

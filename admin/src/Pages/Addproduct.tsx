@@ -24,16 +24,6 @@ const Addproduct = () => {
   const [amount, setamount] = useState("1");
   const [category, setcategory] = useState("Elecetronics");
 
-  function submit(e: { preventDefault: () => void }) {
-    e.preventDefault();
-
-    const ProductData = {
-      title: title,
-      image: image,
-      description: description,
-      price: price,
-    };
-  }
   const navigate = useNavigate();
   const classes = useStyles();
   const verify = async () => {
@@ -108,7 +98,6 @@ const Addproduct = () => {
           </FormControl>
         </Box>
         <div className="actions">
-          <button onClick={() => console.log(category)}>fhss</button>
           <button
             onClick={() => {
               if (title === "") {

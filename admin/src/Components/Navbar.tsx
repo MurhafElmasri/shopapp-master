@@ -21,7 +21,11 @@ export default function Navbar() {
           <div className="NavbarIconContainer">
             <Settings />
           </div>
-          <img src="" alt="" className="Avatar" />
+          <img
+            src="/img/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg"
+            alt="/"
+            className="Avatar"
+          />
         </div>
       </div>
     </div>

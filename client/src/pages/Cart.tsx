@@ -1,9 +1,14 @@
 import { Add, Remove } from "@material-ui/icons";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "react-use-storage";
 import styled from "styled-components";
 import { CartItemType } from "../App";
 import Announcement from "../components/Deal";
 import Navbar from "../components/Navbar";
+import { deleterequest } from "../utils/deleterequest";
+import { putrequest } from "../utils/putrequest";
+import { sendRequest } from "../utils/sendRequest";
 
 const Container = styled.div``;
 
@@ -117,15 +122,49 @@ const Button = styled.button`
   font-weight: 600;
 `;
 
-interface props {
-  removefromcart: (clickedItem: CartItemType) => void;
-  addtocart: (clickedItem: CartItemType) => void;
-  cartItems: CartItemType[];
-}
-
-const Cart = (props: props) => {
-  const { removefromcart, cartItems, addtocart } = props;
+const Cart = () => {
   const navigate = useNavigate();
+  const [cartitems, setcartitems] = useState([] as CartItemType[]);
+  const [userid, setuserid] = useLocalStorage("userid", "");
+
+  const addtocart = async (cartitem: CartItemType) => {
+    const response2 = await putrequest({
+      data: {
+        amount: cartitem.amount + 1,
+        id: cartitem._id,
+      },
+    });
+  };
+
+  const removefromcart = async (cartitem: CartItemType) => {
+    if (cartitem.amount === 1) {
+      const response2 = await deleterequest({
+        id: cartitem._id,
+      });
+    } else {
+      const response2 = await putrequest({
+        data: {
+          amount: cartitem.amount - 1,
+          id: cartitem._id,
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const response = await sendRequest({
+        route: "getCartitems",
+        method: "GET",
+      });
+      setcartitems(response);
+    };
+
+    loadProducts();
+
+    // (async() => {})();
+  }, []);
+
   const calculateTotal = (items: CartItemType[]) =>
     items.reduce((ack: number, item) => ack + item.amount * item.price, 0);
 
@@ -140,7 +179,7 @@ const Cart = (props: props) => {
         </Top>
         <Bottom>
           <Products>
-            {cartItems.map((cartitem) => (
+            {cartitems.map((cartitem) => (
               <Info>
                 <Product>
                   <ProductDetail>
@@ -170,7 +209,7 @@ const Cart = (props: props) => {
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
               <SummaryItemPrice>
-                $ {calculateTotal(cartItems)}{" "}
+                $ {calculateTotal(cartitems)}{" "}
               </SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
@@ -184,7 +223,7 @@ const Cart = (props: props) => {
             <SummaryItem>
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>
-                $ {calculateTotal(cartItems)}{" "}
+                $ {calculateTotal(cartitems)}{" "}
               </SummaryItemPrice>
             </SummaryItem>
             <Button onClick={() => alert("Implement Checkout!")}>
@@ -198,9 +237,3 @@ const Cart = (props: props) => {
 };
 
 export default Cart;
-
-// setCartItems((prev) =>
-//   prev.reduce((ack, product) => {
-//     return [...ack, product];
-//   }, [] as CartItemType[])
-// );

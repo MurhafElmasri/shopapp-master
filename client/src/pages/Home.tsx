@@ -25,6 +25,7 @@ const Home = () => {
     transition: all 0.5s ease;
     cursor: pointer;
     text-size: 30px;
+    margin-bottom: 20px;
   `;
 
   const Container = styled.div`
@@ -76,7 +77,11 @@ const Home = () => {
         <Container>
           <Link to={`/Categories/Elecetronics`}>
             <div className="imgcon">
-              <img className="image" alt="" src="/img/Fuji_Dash_Electronics_1x._SY304_CB432774322_.jpg" />
+              <img
+                className="image"
+                alt=""
+                src="/img/Fuji_Dash_Electronics_1x._SY304_CB432774322_.jpg"
+              />
             </div>
             <Info> Elecetronics </Info>
           </Link>
@@ -84,7 +89,11 @@ const Home = () => {
         <Container>
           <Link to={`/Categories/Fashion`}>
             <div className="imgcon">
-              <img className="image" alt="" src="/img/تعليق توضيحي 2022-01-26 134145.png" />
+              <img
+                className="image"
+                alt=""
+                src="/img/تعليق توضيحي 2022-01-26 134145.png"
+              />
             </div>
             <Info> Fashion </Info>
           </Link>

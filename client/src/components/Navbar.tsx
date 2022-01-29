@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useLocalStorage } from "react-use-storage";
 import styled from "styled-components";
 import "./styles.css";
-// import { getrequest } from "../utils/getrequest";
 
 const Container = styled.div`
   height: 70px;
@@ -56,7 +55,6 @@ interface Props {
 const Navbar = (props: Props) => {
   const [islogin, setislogin] = useLocalStorage("islogin", false);
   const [userid, setuserid] = useLocalStorage("userid", "");
-  // const [userid, setuserid, removeuserid ] = useLocalStorage("userid", "");
   const { searchValues, setSearchValue } = props;
 
   return (

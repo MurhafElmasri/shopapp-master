@@ -62,12 +62,8 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  
-
-  const [islogin, setislogin ] = useLocalStorage("islogin", false);
-  const [userid, setuserid ] = useLocalStorage("userid", "");
-
-
+  const [islogin, setislogin] = useLocalStorage("islogin", false);
+  const [userid, setuserid] = useLocalStorage("userid", "");
 
   const [userIsWrong, setUserIsWrong] = useState(false);
   const [passIsWrong, setpassIsWrong] = useState(false);
@@ -99,15 +95,15 @@ const Login = () => {
           onClick={async () => {
             const response = await sendRequest({
               route: "Login",
-              data: { username, password }
+              data: { username, password },
             });
-            setUserIsWrong(false)
-            setpassIsWrong(false)
-            
+            setUserIsWrong(false);
+            setpassIsWrong(false);
+
             if (response.status === "loginSuccess") {
               setislogin(true);
-              setuserid(response.username)
-              console.log(userid)
+              setuserid(response.username);
+              console.log(userid);
               navigate("/");
             }
 
