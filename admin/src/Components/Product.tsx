@@ -105,7 +105,7 @@ const Product = (props: props) => {
                 <ProductPrice>
                   <div className="editdata">
                     <Link to={`/Editproduct/${product._id}`}>
-                      <button>edit</button>
+                      <Button variant="outlined">edit</Button>
                     </Link>
 
                     <div>

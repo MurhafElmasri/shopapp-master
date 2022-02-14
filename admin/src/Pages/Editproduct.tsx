@@ -4,10 +4,12 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import TextField from "@material-ui/core/TextField";
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getbyid } from "../utils/getbyid";
 import { putrequest } from "../utils/putrequest";
+
 
 const useStyles = makeStyles({
   field: {
@@ -29,30 +31,44 @@ export type CartItemType = {
 const Editproduct = () => {
   const params = useParams() as { id: string };
 
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("title");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
+
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      image: "",
+      description: "",
+      price: "",
+      category: ""
+    },
+    onSubmit: (values) => {
+      console.log(values)
+    }
+  })
 
   useEffect(() => {
     const LoadOldValue = async () => {
       const response = await getbyid({
         id: params.id,
       });
-      setTitle(response.data.title);
-      setImage(response.data.image);
-      setDescription(response.data.description);
-      setPrice(response.data.price);
-      setCategory(response.data.category);  
-
+      setTitle(response.productData.title);
+      setImage(response.productData.image);
+      setDescription(response.productData.description);
+      setPrice(response.productData.price);
+      setCategory(response.productData.category);  
+      // console.log(response.productData.title)
       // setProduct(response.data);
     };
     LoadOldValue();
 
     // (async() => {})();
   }, [params.id]);
-
+  
+  console.log(title)
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -63,60 +79,61 @@ const Editproduct = () => {
   const verify = async () => {
     const response = await putrequest({
       data: {
-        title,
-        image,
-        description,
-        price,
+        title: formik.values.title,
+        image: formik.values.image,
+        description: formik.values.description,
+        price: formik.values.price,
+        category: formik.values.category
       },
       id: params.id,
     });
   };
-
+  
   return (
     <div className="productinfo">
       <div className="form">
         <TextField
           className={classes.field}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={formik.handleChange(title)}
           label="Title"
           variant="outlined"
           color="secondary"
           defaultValue={title}
-          value={title}
+          value={formik.values.title}
           required
         />
         <TextField
           className={classes.field}
-          onChange={(e) => setImage(e.target.value)}
+          onChange={formik.handleChange}
           label="Image URL"
           variant="outlined"
           color="secondary"
           defaultValue={image}
           fullWidth
-          value={image}
+          value={formik.values.image}
           required
         />
         <TextField
           className={classes.field}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={formik.handleChange}
           label="Description"
           variant="outlined"
           color="secondary"
           defaultValue={description}
           fullWidth
-          value={description}
+          value={formik.values.description}
           required
         />
         <TextField
           className={classes.field}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={formik.handleChange}
           label="Price"
           variant="outlined"
           color="secondary"
           defaultValue={price}
           fullWidth
           required
-          value={price}
+          value={formik.values.price}
         />
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
@@ -124,11 +141,11 @@ const Editproduct = () => {
               Category
             </InputLabel>
             <NativeSelect
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={formik.handleChange}
               defaultValue={category}
-              value={category}
+              value={formik.values.category}
             >
-              <option value="Elecetronics"> Elecetronics </option>
+              <option value="Electronics"> Electronics </option>
               <option value="Fashion"> Fashion </option>
               <option value="Sports"> Sports </option>
               <option value="Home improvement"> Home improvement </option>

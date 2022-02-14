@@ -2,7 +2,7 @@ const localhost = process.env.REACT_APP_LOCALHOST_KEY;
 type Args = {
   route: string;
   data?: any;
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method?: "GET" | "POST" ;
 };
 
 export async function sendRequest(params: Args) {

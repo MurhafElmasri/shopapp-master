@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./components/styles.css";
 import Cart from "./pages/Cart";
-import Elecetronics from "./pages/Elecetronics";
+import Electronics from "./pages/Electronics";
+
 import Fashion from "./pages/Fashion";
 import Home from "./pages/Home";
 import HomeImprovement from "./pages/HomeImprovement";
@@ -29,8 +30,8 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/Product/:id" element={<Product />}></Route>
             <Route
-              path="/Categories/Elecetronics"
-              element={<Elecetronics />}
+              path="/Categories/Electronics"
+              element={<Electronics />}
             ></Route>
             <Route path="/Categories/Fashion" element={<Fashion />}></Route>
             <Route path="/Categories/Sports" element={<Sports />}></Route>

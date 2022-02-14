@@ -33,7 +33,7 @@ app.post("/Addproduct", async (req, res) => {
   try {
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
-    console.log(savedProduct);
+    console.log("Product is added successfuly");
   } catch (err) {
     res.status(500).json(err);
   }
@@ -44,7 +44,6 @@ app.post("/Addproduct", async (req, res) => {
 app.get("/getProductsList", async (req, res) => {
   Product.find()
     .then((products: any) => {
-      console.log(products);
       res.send(products);
     })
     .catch((err: any) => {
@@ -64,7 +63,7 @@ app.get("/getProductById/:id", async (req, res) => {
 
   const productData = await Product.findById(productId);
 
-  res.send({ data: productData });
+  res.send({ status: "success", productData });
 });
 
 //EDIT PRODUCT DATA
@@ -85,7 +84,7 @@ app.put("/Editproduct/:id", async (req, res) => {
       if (err) {
         res.send("Error updating");
       } else {
-        console.log(id);
+        console.log("Product data is updated successfuly");
       }
     },
   });
@@ -105,23 +104,30 @@ app.delete("/Deleteproduct/:id", (req, res) => {
   });
 });
 
+//DELTE ALL PRODUCTS
+app.delete("/delete-all-products", (req, res) =>
+  Product.remove().then(function () {
+    console.log("Data deleted"); // Success
+  })
+);
+
 //ADD CART ITEM
 
 app.post("/AddCartitem", async (req, res) => {
   const newcartitem = new Cartitem({
-    username: req.body.username,
-    _id: req.body._id,
-    title: req.body.title,
-    image: req.body.image,
-    description: req.body.description,
-    price: req.body.price,
+    userID: req.body.userID,
+    productID: req.body.productID,
+    // title: req.body.title,
+    // image: req.body.image,
+    // description: req.body.description,
+    // price: req.body.price,
     amount: "1",
-    category: req.body.category,
+    // category: req.body.category,
   });
   try {
     const savedCartitem = await newcartitem.save();
     res.status(201).json(savedCartitem);
-    console.log(savedCartitem);
+    console.log("Product is added to cart successfuly");
   } catch (err) {
     res.status(500).json(err);
   }
@@ -129,15 +135,37 @@ app.post("/AddCartitem", async (req, res) => {
 
 //GET CART ITEMS
 
-app.get("/getCartitems", async (req, res) => {
-  Cartitem.find()
+app.get("/getCartitemIDs/:userID", async (req, res) => {
+  const id = req.params.userID;
+  Cartitem.find({ userID: id })
     .then((Cartitems: any) => {
-      console.log(Cartitems);
+      // console.log(...Cartitems.productID);
       res.send(Cartitems);
     })
     .catch((err: any) => {
       console.log(err);
     });
+});
+
+//GETCART
+
+app.get("/getCartitems/:productID", async (req, res) => {
+  const id = req.params.productID;
+
+  const cartitemdata = await Product.findById(id);
+  if (cartitemdata === null) {
+    res.send({ status: "error" });
+  } else {
+    res.send({ cartitemdata, status: "success" });
+  }
+
+  // .then((Cartitems: any) => {
+  //   // console.log(...Cartitems.productID);
+  //   res.send(cartitemdata);
+  // })
+  // .catch((err: any) => {
+  //   console.log(err);
+  // });
 });
 
 //GET SINGLE CART ITEM
@@ -150,7 +178,26 @@ app.get("/getcartitemById/:id", async (req, res) => {
     return;
   }
   console.log(cartitemid);
-  const isitemincart = await Cartitem.findById(cartitemid);
+  const productData = await Cartitem.findOne({ productID: cartitemid });
+
+  if (productData === null) {
+    res.send({ status: "error" });
+  } else {
+    res.send({ productData, status: "success" });
+  }
+});
+
+//GET MANY CART ITEMS
+
+app.post("/getcartitems", async (req, res) => {
+  const cartitemid = req.body.id;
+
+  if (!cartitemid) {
+    res.send({ status: "Cart item not found" });
+    return;
+  }
+  console.log(cartitemid);
+  const isitemincart = await Product.find({ productID: cartitemid });
 
   if (isitemincart === null) {
     res.send({ status: "error" });
@@ -162,38 +209,44 @@ app.get("/getcartitemById/:id", async (req, res) => {
 //EDIT CART ITEM
 
 app.put("/Editcartitem", async (req, res) => {
-  const cartitemid = req.body.id;
   console.log("Editcartitem called");
-  console.log(req.body.amount);
-  Cartitem.findByIdAndUpdate(
-    cartitemid,
+  const filter = { userID: req.body.userID, productID: req.body.productID };
+
+  Cartitem.findOneAndUpdate(
+    filter,
     {
       $set: {
         amount: req.body.amount,
       },
     },
-    function (err, updatedData) {
+    { new: true },
+
+    (err: any, doc: any) => {
       if (err) {
-        res.send("Error updating");
-      } else {
-        console.log(cartitemid);
+        console.log("Something wrong when updating data!");
+      }else {
+        console.log(doc)
+        res.send(doc)
       }
     }
   );
 });
 
+
 //DELETE CART ITEM
 
 app.delete("/Deletecartitem/:id", (req, res) => {
-  const id = req.params.id;
-  console.log(id);
-  Cartitem.findByIdAndDelete(id, function (err: any, docs: any) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Deleted : ", docs);
+  Cartitem.findOneAndDelete(
+    { userID: req.body.userID },
+    { productID: req.params.id },
+    function (err: any, docs: any) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Deleted : ", docs);
+      }
     }
-  });
+  );
 });
 
 //REGISTER
@@ -238,10 +291,25 @@ app.post("/Login", async (req, res) => {
       return;
     }
 
-    res.send({ status: "loginSuccess", username: userWithPassword.username });
+    res.send({ status: "loginSuccess", id: userWithPassword._id });
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+//GET SINGLE USER
+
+app.get("/getUserById/:id", async (req, res) => {
+  const userID = req.params.id;
+
+  if (!userID) {
+    res.send({ status: "error", userData: undefined });
+    return;
+  }
+
+  const userData = await User.findById(userID);
+
+  res.send({ status: "success", user: userData });
 });
 
 app.listen(3000, () => {

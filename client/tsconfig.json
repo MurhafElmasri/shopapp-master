@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "../admin/src/utils/deleteall.ts", "../admin/src/utils/generateRandomData.ts"  ]
 }

@@ -1,8 +1,9 @@
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocalStorage } from "react-use-storage";
 import styled from "styled-components";
+import { getbyid } from "../utils/getbyid";
 import "./styles.css";
 
 const Container = styled.div`
@@ -54,9 +55,24 @@ interface Props {
 
 const Navbar = (props: Props) => {
   const [islogin, setislogin] = useLocalStorage("islogin", false);
-  const [userid, setuserid] = useLocalStorage("userid", "");
+  // const [userid, setuserid] = useLocalStorage("userid", "")
+  const [userID, setuserID] = useLocalStorage("userID", "");
+  const [user, setuser] = useState("")
   const { searchValues, setSearchValue } = props;
 
+  useEffect(() => {
+    const getProduct = async () => {
+      const response = await getbyid({
+        route: `getUserById/${userID}`,
+        // id: userid,
+        // route: "getUserById",
+      });
+      setuser(response.user.username);
+      console.log(response.user.username)
+    };
+
+    getProduct();
+  }, []);
   return (
     <Container>
       <Wrapper>
@@ -87,7 +103,7 @@ const Navbar = (props: Props) => {
             <ul className="list">
               {islogin ? (
                 <>
-                  <li className="Menuitem">{userid}</li>
+                  <li className="Menuitem">{user}</li>
                   <li
                     className="Menuitem"
                     onClick={() => {

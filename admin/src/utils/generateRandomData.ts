@@ -28,8 +28,8 @@ export default async function generateRandomData(args: GenerateDataArgs) {
     const randomPrice = Math.floor(Math.random() * 1300);
     const randomCategory =
       categoriesList[Math.floor(Math.random() * categoriesList.length)];
-    const randomTitle = randomText(10) + "  " + randomText(5);
-    const randomDescription = randomText(
+    const randomTitle = titleRandomText(10) + "  " + titleRandomText(5);
+    const randomDescription = descRandomText(
       descriptionLength[Math.floor(Math.random() * descriptionLength.length)]
     );
 
@@ -48,7 +48,16 @@ export default async function generateRandomData(args: GenerateDataArgs) {
   return result;
 }
 
-function randomText(length: number) {
+function descRandomText(length: number) {
+  let result = "";
+  const characters = `ABC DEFGH IJKLM NOPQ RSTUVW XYZ`;
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+function titleRandomText(length: number) {
   let result = "";
   const characters = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`;
   const charactersLength = characters.length;

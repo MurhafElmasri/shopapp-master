@@ -12,5 +12,8 @@ export async function putrequest(params: Args) {
     method: "PUT",
     body: JSON.stringify(data),
   });
-  console.log(data);
+  const responseToJson = res.json();
+
+  return responseToJson;
 }
+

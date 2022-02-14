@@ -22,7 +22,7 @@ const Addproduct = () => {
   const [description, setdescription] = useState("");
   const [price, setprice] = useState("");
   const [amount, setamount] = useState("1");
-  const [category, setcategory] = useState("Elecetronics");
+  const [category, setcategory] = useState("Electronics");
 
   const navigate = useNavigate();
   const classes = useStyles();
@@ -88,9 +88,9 @@ const Addproduct = () => {
             </InputLabel>
             <NativeSelect
               onChange={(e) => setcategory(e.target.value)}
-              defaultValue="Elecetronics"
+              defaultValue="Electronics"
             >
-              <option value="Elecetronics"> Elecetronics </option>
+              <option value="Electronics"> Electronics </option>
               <option value="Fashion"> Fashion </option>
               <option value="Sports"> Sports </option>
               <option value="Home improvement"> Home improvement </option>

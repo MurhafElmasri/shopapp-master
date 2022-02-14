@@ -7,6 +7,7 @@ import { CartItemType } from "../App";
 import Announcement from "../components/Deal";
 import Navbar from "../components/Navbar";
 import { deleterequest } from "../utils/deleterequest";
+import { getbyid } from "../utils/getbyid";
 import { putrequest } from "../utils/putrequest";
 import { sendRequest } from "../utils/sendRequest";
 
@@ -122,50 +123,128 @@ const Button = styled.button`
   font-weight: 600;
 `;
 
+type ProductType = {
+  _id: string;
+  userID: string;
+  productID: string;
+  description: string;
+  image: string;
+  price: number;
+  title: string;
+  amount: number;
+  category: string;
+};
+type CartType = {
+  userID: string;
+  productID: string;
+  amount: number;
+};
+
 const Cart = () => {
   const navigate = useNavigate();
-  const [cartitems, setcartitems] = useState([] as CartItemType[]);
-  const [userid, setuserid] = useLocalStorage("userid", "");
+  const [cartitemIDs, setcartitemIDs] = useState([]);
+  const [cartitems, setcartitems] = useState([] as ProductType[]);
+  const [amount, setamount] = useState()
+  const [userID, setuserID] = useLocalStorage("userID", "");
 
-  const addtocart = async (cartitem: CartItemType) => {
-    const response2 = await putrequest({
-      data: {
-        amount: cartitem.amount + 1,
-        id: cartitem._id,
-      },
+
+
+
+
+
+
+
+  const addtocart = async (cartItem: ProductType) => {
+    console.log(cartItem)
+    const response = await getbyid({
+      route: `getcartitemById/${cartItem._id}`,
     });
-  };
 
-  const removefromcart = async (cartitem: CartItemType) => {
-    if (cartitem.amount === 1) {
-      const response2 = await deleterequest({
-        id: cartitem._id,
-      });
-    } else {
+    if (response.productData.userID === userID) {
+      console.log("hello")
       const response2 = await putrequest({
         data: {
-          amount: cartitem.amount - 1,
-          id: cartitem._id,
+          amount: response.productData.amount + 1,
+          productID: response.productData.productID,
+          userID: userID
         },
-      });
+      })
+      console.log(response2.amount)
+      setamount(response2.amount)
+
     }
+
   };
+
+
+
+
+  const removefromcart = async (cartItem: ProductType) => {
+    const response = await getbyid({
+      route: `getcartitemById/${cartItem._id}`,
+    });
+    if (response.productData.userID === userID) {
+      if (response.productData.amount === 1) {
+        const response2 = await deleterequest({
+          id: response.productData.productID,
+          userID: userID,
+        });
+      } else {
+        const response2 = await putrequest({
+          data: {
+            amount: response.productData.amount - 1,
+            productID: response.productData.productID,
+            userID: userID
+          },
+        });
+      }
+    }
+
+  };
+
 
   useEffect(() => {
     const loadProducts = async () => {
       const response = await sendRequest({
-        route: "getCartitems",
+        route: `getCartitemIDs/${userID}`,
         method: "GET",
       });
-      setcartitems(response);
+      console.log(response);
+      setcartitemIDs(response);
+      // console.log(cartitemIDs)
     };
-
     loadProducts();
-
-    // (async() => {})();
   }, []);
 
-  const calculateTotal = (items: CartItemType[]) =>
+
+
+  useEffect(() => {
+    const mapLoop = async () => {
+      console.log('Start')
+    
+      const cart = cartitemIDs.map(async (cartitem: CartType) => {
+        const response = await sendRequest({
+          route: `getCartitems/${cartitem.productID}`,
+          method: "GET",
+        });
+        // console.log(response.cartitemdata);
+        // console.log(cartitemIDs)
+  
+  
+        return response.cartitemdata
+      });
+  
+      const carts =  await Promise.all(cart)
+      setcartitems(carts)
+  
+      console.log(carts)
+      console.log('End')
+    }
+    mapLoop()
+
+  }, [cartitemIDs]);
+
+  const calculateTotal = (items: ProductType[]) =>
     items.reduce((ack: number, item) => ack + item.amount * item.price, 0);
 
   return (
@@ -175,29 +254,32 @@ const Cart = () => {
       <Wrapper>
         <Title>YOUR CART</Title>
         <Top>
+          <TopButton onClick={() => console.log(cartitemIDs)}>
+            SHOPPING
+          </TopButton>
           <TopButton onClick={() => navigate("/")}>CONTINUE SHOPPING</TopButton>
         </Top>
         <Bottom>
           <Products>
-            {cartitems.map((cartitem) => (
+            {cartitems.map((cartItem) => (
               <Info>
                 <Product>
                   <ProductDetail>
-                    <Image src={cartitem.image} />
+                    <Image src={cartItem.image} />
                     <Details>
                       <ProductName>
-                        <b>Product:</b> {cartitem.title}
+                        <b>Product:</b> {cartItem.title}
                       </ProductName>
                     </Details>
                   </ProductDetail>
                   <PriceDetail>
                     <ProductAmountContainer>
-                      <Add onClick={() => addtocart(cartitem)} />
-                      <ProductAmount>{cartitem.amount}</ProductAmount>
-                      <Remove onClick={() => removefromcart(cartitem)} />
+                      <Add onClick={() => addtocart(cartItem)} />
+                      <ProductAmount>{cartItem.amount}</ProductAmount>
+                      <Remove onClick={() => removefromcart(cartItem)} />
                     </ProductAmountContainer>
                     <ProductPrice>
-                      $ {cartitem.price * cartitem.amount}
+                      $ {cartItem.price * cartItem.amount}
                     </ProductPrice>
                   </PriceDetail>
                 </Product>

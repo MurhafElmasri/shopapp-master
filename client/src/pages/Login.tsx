@@ -63,7 +63,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [islogin, setislogin] = useLocalStorage("islogin", false);
-  const [userid, setuserid] = useLocalStorage("userid", "");
+  // const [userid, setuserid] = useLocalStorage("userid", "");
+  const [userID, setuserID] = useLocalStorage("userID", "");
 
   const [userIsWrong, setUserIsWrong] = useState(false);
   const [passIsWrong, setpassIsWrong] = useState(false);
@@ -97,13 +98,15 @@ const Login = () => {
               route: "Login",
               data: { username, password },
             });
+            console.log(response)
             setUserIsWrong(false);
             setpassIsWrong(false);
 
             if (response.status === "loginSuccess") {
               setislogin(true);
-              setuserid(response.username);
-              console.log(userid);
+              // setuser(response.username);
+
+              setuserID(response.id)
               navigate("/");
             }
 

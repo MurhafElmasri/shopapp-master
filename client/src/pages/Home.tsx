@@ -7,7 +7,6 @@ import Deal from "../components/Deal";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import "../components/styles.css";
-import generateRandomData from "../utils/generateRandomData";
 import { sendRequest } from "../utils/sendRequest";
 
 const Home = () => {
@@ -76,25 +75,9 @@ const Home = () => {
 
       <Navbar searchValues={search} setSearchValue={setSearch} />
       <div className="products">
-        <Button
-          onClick={async () => {
-            const data = await generateRandomData({ itemsLength: 200 });
 
-            await Promise.all(
-              data.map(async (product) => {
-                await sendRequest({
-                  route: "Addproduct",
-                  data: product,
-                });
-              })
-            );
-            alert("Added Products Successfully :)");
-          }}
-        >
-          Click Me To Load Data
-        </Button>
         <Container>
-          <Link to={`/Categories/Elecetronics`}>
+          <Link to={`/Categories/Electronics`}>
             <div className="imgcon">
               <img
                 className="image"
@@ -102,7 +85,7 @@ const Home = () => {
                 src="/img/Fuji_Dash_Electronics_1x._SY304_CB432774322_.jpg"
               />
             </div>
-            <Info> Elecetronics </Info>
+            <Info> Electronics </Info>
           </Link>
         </Container>
         <Container>

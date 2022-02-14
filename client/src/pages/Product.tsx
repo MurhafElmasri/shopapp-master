@@ -10,8 +10,6 @@ import { getbyid } from "../utils/getbyid";
 import { putrequest } from "../utils/putrequest";
 import { sendRequest } from "../utils/sendRequest";
 
-// import { getrequest } from "../utils/getrequest";
-
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -33,6 +31,7 @@ const Image = styled.img`
 const InfoContainer = styled.div`
   flex: 1;
   padding: 0px 50px;
+  max-width: 60%
 `;
 
 const Title = styled.h1`
@@ -68,53 +67,51 @@ const Button = styled.button`
     background-color: #f8f4f4;
   }
 `;
-
+type ProductType = {
+  userID: string;
+  productID: string;
+  description: string;
+  image: string;
+  price: number;
+  title: string;
+  amount: number;
+  category: string;
+};
 const Product = () => {
-  const [product, setProduct] = useState<CartItemType | undefined>();
+  const [product, setProduct] = useState<ProductType | undefined>();
   const params = useParams() as { id: string };
-  const [userid, setuserid] = useLocalStorage("userid", "");
-  const [newamount, setnewamount] = useState(1);
+  // const [user, setuser] = useLocalStorage("userid", "");
+  const [userID, setuserID] = useLocalStorage("userID", "");
 
-  const addtocart = async (product: CartItemType) => {
+  const addtocart = async (product: ProductType) => {
     const response = await getbyid({
-      id: product._id,
+      route: `getcartitemById/${params.id}`,
     });
     console.log(response.status);
     if (response.status === "error") {
       const response2 = await sendRequest({
         data: {
-          username: userid,
-          _id: product._id,
-          title: product.title,
-          image: product.image,
-          description: product.description,
-          price: product.price,
-          amount: 1,
-          category: product.category,
+          userID: userID,
+          productID: params.id,
         },
         route: "AddCartitem",
         method: "POST",
       });
+
     }
     if (response.status === "success") {
-      if (response.isitemincart.username === userid) {
+      if (response.productData.userID === userID) { //------------------------------------------------
         const response2 = await putrequest({
           data: {
-            amount: response.isitemincart.amount + 1,
-            id: response.isitemincart._id,
+            amount: product.amount + 1,
+            id: response.productData.productID,
           },
         });
       } else {
         const response2 = await sendRequest({
           data: {
-            username: userid,
-            _id: product._id,
-            title: product.title,
-            image: product.image,
-            description: product.description,
-            price: product.price,
-            amount: 1,
-            category: product.category,
+            userID: userID,
+            productID: params.id,
           },
           route: "AddCartitem",
           method: "POST",
@@ -125,11 +122,9 @@ const Product = () => {
 
   useEffect(() => {
     const getProduct = async () => {
-      const response = await sendRequest({
+      const response = await getbyid({
         route: `getProductById/${params.id}`,
-        method: "GET",
       });
-
       setProduct(response.productData);
     };
 
@@ -141,7 +136,9 @@ const Product = () => {
   const [islogin, setislogin] = useLocalStorage("islogin", false);
 
   if (!product) {
-    return null;
+    return (
+      <p>Product Not Found</p>
+    )
   }
 
   return (

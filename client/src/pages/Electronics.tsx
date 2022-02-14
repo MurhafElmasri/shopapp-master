@@ -7,7 +7,7 @@ import Product from "../components/Product";
 import "../components/styles.css";
 import { sendRequest } from "../utils/sendRequest";
 
-const Elecetronics = () => {
+const Electronics = () => {
   const [products, setProducts] = useState<CartItemType[]>([]);
   const [search, setSearch] = useState("");
 
@@ -26,7 +26,7 @@ const Elecetronics = () => {
     // (async() => {})();
   }, []);
 
-  const Elecetronicslist = products.filter((x) => x.category === "Electronics");
+  const Electronicslist = products.filter((x) => x.category === "Electronics");
 
   //   const filteredProductsList =
   //     search.trim() === "" || !products
@@ -40,7 +40,7 @@ const Elecetronics = () => {
       <Deal />
       <Navbar searchValues={search} setSearchValue={setSearch} />
       <div className="products">
-        {Elecetronicslist.map((product: CartItemType) => (
+        {Electronicslist.map((product: CartItemType) => (
           <Product product={product} key={product._id} />
         ))}
       </div>
@@ -49,4 +49,4 @@ const Elecetronics = () => {
   );
 };
 
-export default Elecetronics;
+export default Electronics;
