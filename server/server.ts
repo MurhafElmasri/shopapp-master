@@ -71,23 +71,27 @@ app.get("/getProductById/:id", async (req, res) => {
 app.put("/Editproduct/:id", async (req, res) => {
   const id = req.params.id;
 
-  Product.findOneAndUpdate({
-    id,
-    $set: {
-      title: req.body.title,
-      image: req.body.image,
-      description: req.body.description,
-      price: req.body.price,
-      category: req.body.category,
+  Product.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        title: req.body.title,
+        image: req.body.image,
+        description: req.body.description,
+        price: req.body.price,
+        category: req.body.category,
+      },
     },
-    function(err: any, updatedData: any) {
+    (err: any, updateData: any) => {
+      console.log("function running");
       if (err) {
+        console.log("error" + err.message);
         res.send("Error updating");
       } else {
         console.log("Product data is updated successfuly");
       }
-    },
-  });
+    }
+  );
 });
 
 //DELETE PRODUCT
@@ -224,19 +228,18 @@ app.put("/Editcartitem", async (req, res) => {
     (err: any, doc: any) => {
       if (err) {
         console.log("Something wrong when updating data!");
-      }else {
-        console.log(doc)
-        res.send(doc)
+      } else {
+        console.log(doc);
+        res.send(doc);
       }
     }
   );
 });
 
-
 //DELETE CART ITEM
 
 app.delete("/Deletecartitem", (req, res) => {
-  console.log("Cart item delete called")
+  console.log("Cart item delete called");
   Cartitem.findOneAndDelete(
     { userID: req.body.userID },
     { productID: req.body.id },

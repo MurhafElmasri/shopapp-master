@@ -12,4 +12,5 @@ export async function putrequest(params: Args) {
     method: "PUT",
     body: JSON.stringify(data),
   });
+  return res;
 }

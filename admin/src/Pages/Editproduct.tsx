@@ -5,11 +5,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import TextField from "@material-ui/core/TextField";
 import { useFormik } from "formik";
+import { values } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getbyid } from "../utils/getbyid";
 import { putrequest } from "../utils/putrequest";
-
 
 const useStyles = makeStyles({
   field: {
@@ -31,35 +31,30 @@ export type CartItemType = {
 const Editproduct = () => {
   const params = useParams() as { id: string };
 
-  const [oldTitle, setTitle] = useState("title");
-  const [oldImage, setImage] = useState("");
-  const [oldDescription, setDescription] = useState("");
-  const [oldPrice, setPrice] = useState("");
-  const [oldCategory, setCategory] = useState("");
-
   const formik = useFormik({
     initialValues: {
       title: "",
       image: "",
       description: "",
       price: "",
-      category: ""
+      category: "",
     },
     onSubmit: (values) => {
-      console.log(values)
-    }
-  })
+      console.log(values);
+    },
+  });
 
   useEffect(() => {
     const LoadOldValue = async () => {
       const response = await getbyid({
         id: params.id,
       });
-      setTitle(response.productData.title);
-      setImage(response.productData.image);
-      setDescription(response.productData.description);
-      setPrice(response.productData.price);
-      setCategory(response.productData.category);  
+      formik.setFieldValue("title", response.productData.title);
+      formik.setFieldValue("image", response.productData.image);
+      formik.setFieldValue("description", response.productData.description);
+      formik.setFieldValue("price", response.productData.price);
+      formik.setFieldValue("category", response.productData.category);
+
       // console.log(response.productData.title)
       // setProduct(response.data);
     };
@@ -67,7 +62,6 @@ const Editproduct = () => {
 
     // (async() => {})();
   }, [params.id]);
-  
 
   const navigate = useNavigate();
   const classes = useStyles();
@@ -83,12 +77,13 @@ const Editproduct = () => {
         image: formik.values.image,
         description: formik.values.description,
         price: formik.values.price,
-        category: formik.values.category
+        category: formik.values.category,
       },
       id: params.id,
     });
+    navigator();
   };
-  
+
   return (
     <div className="productinfo">
       <div className="form">
@@ -98,9 +93,10 @@ const Editproduct = () => {
           label="Title"
           variant="outlined"
           color="secondary"
-          defaultValue={oldTitle}
+          defaultValue={formik.values.title}
           value={formik.values.title}
           required
+          name="title"
         />
         <TextField
           className={classes.field}
@@ -108,9 +104,10 @@ const Editproduct = () => {
           label="Image URL"
           variant="outlined"
           color="secondary"
-          defaultValue={oldImage}
+          defaultValue={formik.values.image}
           fullWidth
           value={formik.values.image}
+          name="image"
           required
         />
         <TextField
@@ -119,9 +116,10 @@ const Editproduct = () => {
           label="Description"
           variant="outlined"
           color="secondary"
-          defaultValue={oldDescription}
+          defaultValue={formik.values.description}
           fullWidth
           value={formik.values.description}
+          name="description"
           required
         />
         <TextField
@@ -130,9 +128,10 @@ const Editproduct = () => {
           label="Price"
           variant="outlined"
           color="secondary"
-          defaultValue={oldPrice}
+          defaultValue={formik.values.price}
           fullWidth
           required
+          name="price"
           value={formik.values.price}
         />
         <Box sx={{ minWidth: 120 }}>
@@ -142,8 +141,9 @@ const Editproduct = () => {
             </InputLabel>
             <NativeSelect
               onChange={formik.handleChange}
-              defaultValue={oldCategory}
+              defaultValue={formik.values.category}
               value={formik.values.category}
+              name="category"
             >
               <option value="Electronics"> Electronics </option>
               <option value="Fashion"> Fashion </option>
@@ -168,7 +168,6 @@ const Editproduct = () => {
                       alert("some inputs is empty");
                     } else {
                       verify();
-                      navigator();
                     }
                   }
                 }
