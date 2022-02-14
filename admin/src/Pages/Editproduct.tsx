@@ -31,11 +31,11 @@ export type CartItemType = {
 const Editproduct = () => {
   const params = useParams() as { id: string };
 
-  const [title, setTitle] = useState("title");
-  const [image, setImage] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
+  const [oldTitle, setTitle] = useState("title");
+  const [oldImage, setImage] = useState("");
+  const [oldDescription, setDescription] = useState("");
+  const [oldPrice, setPrice] = useState("");
+  const [oldCategory, setCategory] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -68,7 +68,7 @@ const Editproduct = () => {
     // (async() => {})();
   }, [params.id]);
   
-  console.log(title)
+
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -94,11 +94,11 @@ const Editproduct = () => {
       <div className="form">
         <TextField
           className={classes.field}
-          onChange={formik.handleChange(title)}
+          onChange={formik.handleChange}
           label="Title"
           variant="outlined"
           color="secondary"
-          defaultValue={title}
+          defaultValue={oldTitle}
           value={formik.values.title}
           required
         />
@@ -108,7 +108,7 @@ const Editproduct = () => {
           label="Image URL"
           variant="outlined"
           color="secondary"
-          defaultValue={image}
+          defaultValue={oldImage}
           fullWidth
           value={formik.values.image}
           required
@@ -119,7 +119,7 @@ const Editproduct = () => {
           label="Description"
           variant="outlined"
           color="secondary"
-          defaultValue={description}
+          defaultValue={oldDescription}
           fullWidth
           value={formik.values.description}
           required
@@ -130,7 +130,7 @@ const Editproduct = () => {
           label="Price"
           variant="outlined"
           color="secondary"
-          defaultValue={price}
+          defaultValue={oldPrice}
           fullWidth
           required
           value={formik.values.price}
@@ -142,7 +142,7 @@ const Editproduct = () => {
             </InputLabel>
             <NativeSelect
               onChange={formik.handleChange}
-              defaultValue={category}
+              defaultValue={oldCategory}
               value={formik.values.category}
             >
               <option value="Electronics"> Electronics </option>
@@ -155,16 +155,16 @@ const Editproduct = () => {
         <div className="actions">
           <button
             onClick={() => {
-              if (title === "") {
+              if (formik.values.title === "") {
                 alert("some inputs is empty");
               } else {
-                if (image === "") {
+                if (formik.values.image === "") {
                   alert("some inputs is empty");
                 } else {
-                  if (description === "") {
+                  if (formik.values.description === "") {
                     alert("some inputs is empty");
                   } else {
-                    if (price === "") {
+                    if (formik.values.price === "") {
                       alert("some inputs is empty");
                     } else {
                       verify();

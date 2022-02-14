@@ -1,17 +1,17 @@
 const localhost = process.env.REACT_APP_LOCALHOST_KEY;
-type Args = { id: string, userID: string };
+type Args = { data: any };
 
 export async function deleterequest(params: Args) {
-  const { id, userID } = params;
+  const { data } = params;
 
-  const res = await fetch(`${localhost}:3000/Deletecartitem/${id}`, {
+  const res = await fetch(`${localhost}:3000/Deletecartitem`, {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
     } as any,
     method: "DELETE",
-    body: JSON.stringify(userID)
+    body: JSON.stringify(data)
   });
-  console.log("hello World")
+  console.log(data)
 }
 

@@ -235,10 +235,11 @@ app.put("/Editcartitem", async (req, res) => {
 
 //DELETE CART ITEM
 
-app.delete("/Deletecartitem/:id", (req, res) => {
+app.delete("/Deletecartitem", (req, res) => {
+  console.log("Cart item delete called")
   Cartitem.findOneAndDelete(
     { userID: req.body.userID },
-    { productID: req.params.id },
+    { productID: req.body.id },
     function (err: any, docs: any) {
       if (err) {
         console.log(err);

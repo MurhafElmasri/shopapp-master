@@ -186,8 +186,10 @@ const Cart = () => {
     if (response.productData.userID === userID) {
       if (response.productData.amount === 1) {
         const response2 = await deleterequest({
-          id: response.productData.productID,
-          userID: userID,
+          data: {
+            id: response.productData.productID,
+            userID: userID,
+          }
         });
       } else {
         const response2 = await putrequest({
